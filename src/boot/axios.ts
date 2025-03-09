@@ -46,7 +46,12 @@ api.interceptors.response.use(
 
     if (error.status === 403) {
       const auth = useAuthStore()
-      auth.shouldTryAgain ? await auth.refresh() : auth.logout()
+
+      if (auth.shouldTryAgain) return await auth.refresh()
+
+      auth.logout()
+      await Router.push({ name: 'login' })
+
     }
 
     if (error.status === 401) {

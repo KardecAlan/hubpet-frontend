@@ -2,11 +2,11 @@
 import { onMounted, Ref, ref } from 'vue'
 import { useReadOnlyApi } from 'src/utils/api'
 import { Paginacao } from 'components/models'
-import FiltroTutores from 'pages/tutor/components/FiltroTutores.vue'
 import TabelaConsultas from 'pages/consulta/components/TabelaConsultas.vue'
-import { FiltroConsulta } from 'pages/consulta/components/models'
+import { ParamsFiltroConsulta } from 'pages/consulta/components/models'
+import FiltroConsulta from 'pages/consulta/components/FiltroConsulta.vue'
 
-const filtro: Ref<FiltroConsulta> = ref({})
+const filtro: Ref<ParamsFiltroConsulta> = ref({})
 
 const tutores = ref([])
 const loading = ref(false)
@@ -29,7 +29,7 @@ const listarTutores = async ({ pagination }: any = {}) => {
     ...filtro.value,
   }
 
-  const { content, totalElements } = (await api.list('/tutor', filtros)) ?? {}
+  const { content, totalElements } = await api.list('/consulta', filtros) ?? {}
 
   tutores.value = content
   paginacao.value.rowsNumber = totalElements
@@ -46,7 +46,7 @@ onMounted(listarTutores)
       <q-breadcrumbs-el label="Tutor" />
     </q-breadcrumbs>
 
-    <filtro-tutores v-model="filtro" class="q-mb-md" @filter="listarTutores" />
+    <filtro-consulta v-model="filtro" class="q-mb-md" @filter="listarTutores" />
 
     <tabela-consultas
       :rows="tutores"

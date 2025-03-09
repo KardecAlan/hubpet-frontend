@@ -1,19 +1,21 @@
 import { Column } from 'components/models'
-import { formatarCpf } from 'src/utils/string-utils'
 
 export interface Consulta {
   id?: number
-  versao?: number
-  nome?: string
-  cpf?: string
-  dataNascimento?: string
-  telefone?: string
-  email?: string
-  celular?: string
+  retorno?: boolean
+  dataConsulta?: string
+  duracao?: number
+  consultaCancelada?: boolean
+  anamnese?: string
+  exameFisico?: string
+  diagnostico?: string
+  tratamento?: string
+  proximosPassos?: string
   observacoes?: string
+  tuteladoId?: number
 }
 
-export interface FiltroConsulta {
+export interface ParamsFiltroConsulta {
   dataInicio?: string
   dataFim?: string
 }
@@ -29,14 +31,13 @@ export const ConsultasColumns: Column[] = [
   {
     name: 'nome',
     label: 'Nome',
-    field: (row: Consulta) => row.nome,
+    field: (row: Consulta) => row.dataConsulta,
     align: 'left',
   },
   {
     name: 'cpf',
     label: 'Cpf',
-    field: (row: Consulta) => row.cpf,
-    format: formatarCpf,
+    field: (row: Consulta) => row.retorno,
     align: 'left',
   },
   {

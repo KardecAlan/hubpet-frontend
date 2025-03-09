@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import EqFormInput from 'components/EqFormInput.vue'
 import EqFormFiltro from 'components/EqFormFiltro.vue'
-import { FiltroConsulta } from 'pages/consulta/components/models'
+import { ParamsFiltroConsulta } from 'pages/consulta/components/models'
 
-const model = defineModel<FiltroConsulta>({ required: true })
+const model = defineModel<ParamsFiltroConsulta>({ required: true })
 
 defineEmits(['filter'])
 </script>
@@ -16,14 +16,14 @@ defineEmits(['filter'])
     @submit="$emit('filter')"
   >
     <eq-form-input
-      v-model="model.nome"
-      label="Nome"
+      v-model="model.dataInicio"
+      label="Data Início"
       class="col-md-grow col-sm-12 q-mr-md"
     />
 
     <eq-form-input
-      v-model="model.cpf"
-      label="CPF"
+      v-model="model.dataFim"
+      label="Data Fim"
       class="col-md-grow col-sm-12 q-mr-md"
     />
   </eq-form-filtro>

@@ -4,41 +4,40 @@ import { useCrudApi } from 'src/utils/api'
 import EqFormInput from 'components/EqFormInput.vue'
 import { useRouter } from 'vue-router'
 import { Notify } from 'quasar'
-import { Tutor, TutorFormProps } from 'pages/tutor/components/models'
-import EnderecoForm from 'components/EnderecoForm.vue'
 import FormLabel from 'components/FormLabel.vue'
+import { Consulta, ConsultaFormProps } from 'pages/consulta/components/models'
+import { Tutelado } from 'pages/tutelado/components/models'
 
-const props = defineProps<TutorFormProps>()
+const props = defineProps<ConsultaFormProps>()
 
-const form: Ref<Tutor> = ref({
-  endereco: {
-    cep: '',
-    cidade: '',
-    estado: '',
-    bairro: '',
-    complemento: '',
-    numero: '',
-    logradouro: '',
-  },
-})
+const form: Ref<Consulta> = ref({ retorno: false })
+const tutelados: Ref<Tutelado[]> = ref([])
+
+const consultaDetalhada = ref(false)
 
 const router = useRouter()
 const api = useCrudApi()
 
 const isVisualizar = props.isReadOnly
 
-const carregarTutor = async () => {
+const carregarTutelados = async () => {
+  const { content } = await api.list('/tutelado', {}) ?? {}
+
+  tutelados.value = content
+}
+
+const carregarConsulta = async () => {
   if (!props.id) {
     return
   }
 
-  const data = await api.get(`/tutor/${props.id}`)
+  const data = await api.get(`/consulta/${props.id}`)
   if (data) Object.assign(form.value, data)
 }
 
-onMounted(carregarTutor)
-const salvarTutor = async (voltar: boolean) => {
-  const response = await api.save('/tutor', form.value, props.id)
+
+const salvarConsulta = async () => {
+  const response = await api.save('/consulta', form.value, props.id)
 
   if (!response) {
     return
@@ -52,10 +51,16 @@ const salvarTutor = async (voltar: boolean) => {
     progress: true,
   })
 
-  if (voltar) voltarPagina()
+  voltarPagina()
 }
 
 const voltarPagina = () => router.back()
+
+
+onMounted(async () => {
+  await carregarConsulta()
+  await carregarTutelados()
+})
 </script>
 
 <template>
@@ -63,95 +68,129 @@ const voltarPagina = () => router.back()
     <q-breadcrumbs class="q-mb-md text-subtitle1">
       <q-breadcrumbs-el label="Início" :to="{ name: 'home' }" />
 
-      <q-breadcrumbs-el label="Tutor" :to="{ name: 'tutor-listagem' }" />
+      <q-breadcrumbs-el label="Consulta" :to="{ name: 'consulta-listagem' }" />
 
       <q-breadcrumbs-el :label="modo" />
     </q-breadcrumbs>
 
     <q-card class="rounded">
       <q-card-section>
-        <form-label label="Identificação" />
+        <form-label label="Consulta" />
 
         <div class="row q-col-gutter-x-md">
-          <eq-form-input
-            v-model="form.nome"
-            label="Nome"
-            class="col-md-4 col-sm-12"
-            outlined
-            :readonly="isVisualizar"
-          />
 
           <eq-form-input
-            v-model="form.cpf"
-            label="CPF"
-            class="col-md-4 col-sm-12"
+            model-value=""
+            label="Tutelado"
+            class="col-md-3 col-12"
             outlined
             :readonly="isVisualizar"
-            mask="###.###.###-##"
-            fill-mask
-            unmasked-value
-          />
+          >
+            <q-select
+              v-model="form.tuteladoId"
+              outlined
+              class="bg-grey-1"
+              input-debounce="400"
+              use-input
+              emit-value
+              map-options
+              option-value="id"
+              option-label="nome"
+              :options="tutelados"
+            />
+          </eq-form-input>
+
 
           <eq-form-input
-            v-model="form.dataNascimento"
+            v-model="form.dataConsulta"
             type="date"
-            label="Data de nascimento"
-            class="col-md-4 col-sm-12"
-            outlined
-            :readonly="isVisualizar"
-          />
-        </div>
-      </q-card-section>
-
-      <q-card-section>
-        <form-label label="Dados de Contato" />
-
-        <div class="row q-col-gutter-x-md">
-          <eq-form-input
-            v-model="form.celular"
-            label="Celular"
+            label="Data da consulta"
             class="col-md-3 col-sm-12"
             outlined
             :readonly="isVisualizar"
-            mask="(##) # ####-####"
-            fill-mask
-            unmasked-value
           />
 
           <eq-form-input
-            v-model="form.telefone"
-            label="Telefone"
+            v-model="form.duracao"
+            type="number"
+            label="Duração"
             class="col-md-3 col-sm-12"
             outlined
             :readonly="isVisualizar"
-            mask="(##) ####-####"
-            fill-mask
-            unmasked-value
+          />
+
+          <q-toggle
+            v-model="form.retorno"
+            label="Retorno?"
+            left-label
+            class="col-md-1 col-sm-6"
+            :readonly="isVisualizar"
+          />
+
+          <q-toggle
+            v-model="consultaDetalhada"
+            label="Consulta detalhada?"
+            left-label
+            class="col-md-1 col-sm-6"
+            :readonly="isVisualizar"
+
           />
 
           <eq-form-input
-            v-model="form.email"
-            label="Email"
-            class="col-md-6 col-sm-12"
+            v-model="form.anamnese"
+            label="Anamnese"
+            class="col-12"
+            autogrow
+            outlined
+            :readonly="isVisualizar"
+
+          />
+
+          <eq-form-input
+            v-show="consultaDetalhada"
+            v-model="form.exameFisico"
+            label="Exame Físico"
+            class="col-12"
+            autogrow
             outlined
             :readonly="isVisualizar"
           />
-        </div>
-      </q-card-section>
 
-      <q-card-section>
-        <endereco-form v-model="form.endereco!" />
-      </q-card-section>
+          <eq-form-input
+            v-show="consultaDetalhada"
+            v-model="form.diagnostico"
+            label="Diagnóstico"
+            autogrow
+            class="col-12"
+            outlined
+            :readonly="isVisualizar"
+          />
 
-      <q-card-section>
-        <form-label label="Observações Internas" />
+          <eq-form-input
+            v-show="consultaDetalhada"
+            v-model="form.tratamento"
+            label="Tratamento"
+            autogrow
+            class="col-12"
+            outlined
+            :readonly="isVisualizar"
+          />
 
-        <div class="row q-col-gutter-x-md">
-          <q-input
+          <eq-form-input
+            v-show="consultaDetalhada"
+            v-model="form.proximosPassos"
+            label="Próximos Passos"
+            autogrow
+            class="col-12"
+            outlined
+            :readonly="isVisualizar"
+          />
+
+          <eq-form-input
             v-model="form.observacoes"
-            type="textarea"
-            class="col-12 rounded dark-border"
-            bg-color="grey-1"
+            label="Observações"
+            class="col-12"
+            autogrow
             outlined
             :readonly="isVisualizar"
           />
@@ -166,20 +205,14 @@ const voltarPagina = () => router.back()
           no-caps
           @click="voltarPagina"
         />
-        <q-btn
-          v-if="!isVisualizar"
-          label="Salvar e Sair"
-          color="primary"
-          no-caps
-          @click="salvarTutor(true)"
-        />
+
         <q-btn
           v-if="!isVisualizar"
           label="Salvar"
           style="width: 5em"
-          color="positive"
+          color="primary"
           no-caps
-          @click="salvarTutor(false)"
+          @click="salvarConsulta"
         />
       </q-card-actions>
     </q-card>
