@@ -2,13 +2,13 @@
 import { onMounted, Ref, ref } from 'vue'
 import { useReadOnlyApi } from 'src/utils/api'
 import { Paginacao } from 'components/models'
-import TabelaTutores from 'pages/tutor/components/TabelaTutores.vue'
-import FiltroTutores from 'pages/tutor/components/FiltroTutores.vue'
-import { FiltroTutor } from 'pages/tutor/components/models'
+import FiltroTutelado from 'pages/tutelado/components/FiltroTutelado.vue'
+import TabelaTutelados from 'pages/tutelado/components/TabelaTutelados.vue'
+import { ParamsFiltroTutelado } from 'pages/tutelado/components/models'
 
-const filtro: Ref<FiltroTutor> = ref({})
+const filtro: Ref<ParamsFiltroTutelado> = ref({})
 
-const tutores = ref([])
+const tutelados = ref([])
 const loading = ref(false)
 
 const api = useReadOnlyApi()
@@ -21,7 +21,7 @@ const paginacao: Ref<Paginacao> = ref({
   rowsNumber: 1,
 })
 
-const listarTutores = async ({ pagination }: any = {}) => {
+const listarTutelados = async ({ pagination }: any = {}) => {
   loading.value = true
   if (pagination) paginacao.value = pagination
 
@@ -29,36 +29,35 @@ const listarTutores = async ({ pagination }: any = {}) => {
     ...filtro.value,
   }
 
-  const { content, totalElements } = (await api.list('/tutor', filtros)) ?? {}
+  const { content, totalElements } =
+    (await api.list('/tutelado', filtros)) ?? {}
 
-  tutores.value = content
+  tutelados.value = content
   paginacao.value.rowsNumber = totalElements
   loading.value = false
 }
 
-onMounted(listarTutores)
+onMounted(listarTutelados)
 </script>
 
 <template>
   <q-page class="q-px-md q-py-md">
     <q-breadcrumbs class="q-mb-md text-subtitle1">
       <q-breadcrumbs-el label="Início" to="/" />
-      <q-breadcrumbs-el label="Tutor" />
+      <q-breadcrumbs-el label="Tutelados" />
     </q-breadcrumbs>
 
-    <filtro-tutores v-model="filtro" class="q-mb-md" @filter="listarTutores" />
+    <filtro-tutelado
+      v-model="filtro"
+      class="q-mb-md"
+      @filter="listarTutelados"
+    />
 
-    <tabela-tutores
-      :rows="tutores"
+    <tabela-tutelados
+      :rows="tutelados"
       v-model:paginacao="paginacao"
-      @request="listarTutores"
+      @request="listarTutelados"
       :loading="loading"
     />
   </q-page>
 </template>
-<style scoped>
-.buttons-container > * {
-  font-weight: bold;
-  margin-left: 8px;
-}
-</style>

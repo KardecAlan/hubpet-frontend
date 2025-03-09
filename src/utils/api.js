@@ -1,15 +1,12 @@
-import { api } from 'boot/axios';
-import { notify } from 'src/utils/notify-utils';
-
+import { api } from 'boot/axios'
+import { notify } from 'src/utils/notify-utils'
 
 const useReadOnlyApi = () => {
-
   return {
-
     async list(resource, params) {
       try {
         const { data } = await api.get(resource, { params })
-        if(!data) {
+        if (!data) {
           notify.info('Nenhum registro encontrado')
         }
         return data
@@ -27,8 +24,7 @@ const useReadOnlyApi = () => {
         notify.error(e?.response?.data?.message)
       }
       return null
-    }
-
+    },
   }
 }
 
@@ -38,21 +34,18 @@ const useCrudApi = () => {
 
     async save(resource, data, id, config) {
       try {
-        if(!id) {
+        if (!id) {
           return await api.post(resource, data, config)
         }
 
-        if(data instanceof FormData) {
+        if (data instanceof FormData) {
           data.append('_method', 'PUT')
           return await api.post(`${resource}/${id}`, data, config)
         }
 
         return await api.put(`${resource}/${id}`, data, config)
-
-
-
       } catch (e) {
-        e?.response?.data?.errors.forEach(error => notify.error(error))
+        e?.response?.data?.errors.forEach((error) => notify.error(error))
       }
       return null
     },
@@ -72,11 +65,8 @@ const useCrudApi = () => {
       } catch (e) {
         notify.error(e?.response?.data?.message)
       }
-    }
+    },
   }
 }
 
-export {
-  useReadOnlyApi,
-  useCrudApi,
-}
+export { useReadOnlyApi, useCrudApi }

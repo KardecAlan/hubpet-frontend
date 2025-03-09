@@ -1,26 +1,25 @@
 export function base64ToBlob(base64, mimeType = '') {
-  if(!base64) return new Blob
+  if (!base64) return new Blob()
 
-  const byteCharacters = atob(base64);
+  const byteCharacters = atob(base64)
 
-  const byteNumbers = new Array(byteCharacters.length);
+  const byteNumbers = new Array(byteCharacters.length)
   for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
   }
 
-  const byteArray = new Uint8Array(byteNumbers);
+  const byteArray = new Uint8Array(byteNumbers)
 
-
-  return new Blob([byteArray], { type: mimeType });
+  return new Blob([byteArray], { type: mimeType })
 }
 
 export function base64ToFile(base64String, fileName, mimeType) {
   const blob = base64ToBlob(base64String)
-  return new File([blob], fileName, { type: mimeType });
+  return new File([blob], fileName, { type: mimeType })
 }
 
 export function generateFileUrl(url) {
-  if(!url) return
+  if (!url) return
   return window.URL.createObjectURL(url)
 }
 

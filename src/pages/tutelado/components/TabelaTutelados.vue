@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Paginacao } from 'components/models'
 import { useRouter } from 'vue-router'
-import { TutoresColumns } from 'pages/tutor/components/models'
+import { TuteladosColumns } from 'pages/tutelado/components/models'
 import { QTableProps } from 'quasar'
 
 defineEmits(['request'])
@@ -14,7 +14,7 @@ const router = useRouter()
 
 const redirecionar = (mode: string, id: number) =>
   router.push({
-    name: `tutor-${mode}`,
+    name: `tutelado-${mode}`,
     query: { id },
   })
 </script>
@@ -22,8 +22,8 @@ const redirecionar = (mode: string, id: number) =>
 <template>
   <q-table
     v-bind="$props"
-    title="Tutores"
-    :columns="TutoresColumns"
+    title="Tutelados"
+    :columns="TuteladosColumns"
     table-header-class="bg-light"
     :rows-per-page-options="[5, 10, 15, 20, 25, 50]"
     class="rounded"
@@ -31,9 +31,9 @@ const redirecionar = (mode: string, id: number) =>
   >
     <template #top-right>
       <q-btn
-        label="Novo Tutor"
+        label="Novo Tutelado"
         color="primary"
-        :to="{ name: 'tutor-novo' }"
+        :to="{ name: 'tutelado-novo' }"
         rounded
       />
     </template>

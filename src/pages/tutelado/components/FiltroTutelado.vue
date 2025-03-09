@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import EqFormInput from 'components/EqFormInput.vue'
 import EqFormFiltro from 'components/EqFormFiltro.vue'
-import { FiltroTutor } from 'pages/tutor/components/models'
+import { ParamsFiltroTutelado } from 'pages/tutelado/components/models'
 
-const model = defineModel<FiltroTutor>({ required: true })
+const model = defineModel<ParamsFiltroTutelado>({ required: true })
 
 defineEmits(['filter'])
 </script>

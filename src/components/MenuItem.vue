@@ -5,10 +5,7 @@
     active-class="active-route"
     class="text-gray item"
   >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
+    <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
 
@@ -20,26 +17,28 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'EssentialLink'
-});
+  name: 'EssentialLink',
+})
 
 export interface EssentialLinkProps {
-  title: string;
-  name?: string;
-  link?: string;
-  icon?: string;
-  hideOnDashboard?: boolean;
+  title: string
+  name?: string
+  link?: string
+  icon?: string
+  hideOnDashboard?: boolean
 }
 
 withDefaults(defineProps<EssentialLinkProps>(), {
   caption: '',
   link: '#',
   icon: '',
-});
+})
 </script>
 
 <style scoped lang="scss">
-.item, .item:focus, .item:hover {
+.item,
+.item:focus,
+.item:hover {
   border-radius: 0 25px 25px 0;
   margin-right: 2px;
 }

@@ -2,11 +2,11 @@
 import { onMounted, Ref, ref } from 'vue'
 import { useReadOnlyApi } from 'src/utils/api'
 import { Paginacao } from 'components/models'
-import TabelaTutores from 'pages/tutor/components/TabelaTutores.vue'
 import FiltroTutores from 'pages/tutor/components/FiltroTutores.vue'
-import { FiltroTutor } from 'pages/tutor/components/models'
+import TabelaConsultas from 'pages/consulta/components/TabelaConsultas.vue'
+import { FiltroConsulta } from 'pages/consulta/components/models'
 
-const filtro: Ref<FiltroTutor> = ref({})
+const filtro: Ref<FiltroConsulta> = ref({})
 
 const tutores = ref([])
 const loading = ref(false)
@@ -48,7 +48,7 @@ onMounted(listarTutores)
 
     <filtro-tutores v-model="filtro" class="q-mb-md" @filter="listarTutores" />
 
-    <tabela-tutores
+    <tabela-consultas
       :rows="tutores"
       v-model:paginacao="paginacao"
       @request="listarTutores"
