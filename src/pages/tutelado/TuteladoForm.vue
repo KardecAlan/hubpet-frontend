@@ -224,8 +224,6 @@ onMounted(onMountedHook)
             outlined
             class="bg-grey-1"
             input-debounce="400"
-            @input="carregarTutor"
-            use-input
             map-options
             :options="tutorOptions"
           />

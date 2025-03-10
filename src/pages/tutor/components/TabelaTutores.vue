@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { TutoresColumns } from 'pages/tutor/components/models'
 import { QTableProps } from 'quasar'
 
-defineEmits(['request'])
+defineEmits(['request', 'delete'])
 
 defineProps<QTableProps>()
 
@@ -61,6 +61,9 @@ const redirecionar = (mode: string, id: number) =>
               >Editar</q-tooltip
             >
           </q-btn>
+          <q-btn icon="fa-solid fa-trash" color="negative" dense @click="$emit('delete', row.id)">
+            <q-tooltip anchor="top middle" self="bottom middle">Excluir</q-tooltip>
+          </q-btn>
         </div>
       </q-td>
     </template>
@@ -69,7 +72,7 @@ const redirecionar = (mode: string, id: number) =>
 
 <style scoped>
 .acoes {
-  visibility: hidden;
+  visibility: visible;
 }
 tr:hover .acoes {
   visibility: visible;

@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue'
-import { useReadOnlyApi } from 'src/utils/api'
+import { useCrudApi } from 'src/utils/api';
 import { Paginacao } from 'components/models'
 import FiltroTutelado from 'pages/tutelado/components/FiltroTutelado.vue'
 import TabelaTutelados from 'pages/tutelado/components/TabelaTutelados.vue'
 import { ParamsFiltroTutelado } from 'pages/tutelado/components/models'
+import { useQuasar } from 'quasar';
 
 const filtro: Ref<ParamsFiltroTutelado> = ref({})
 
 const tutelados = ref([])
 const loading = ref(false)
 
-const api = useReadOnlyApi()
+const api = useCrudApi()
+const $q = useQuasar()
 
 const paginacao: Ref<Paginacao> = ref({
   sortBy: 'desc',
@@ -37,6 +39,32 @@ const listarTutelados = async ({ pagination }: any = {}) => {
   loading.value = false
 }
 
+const deletarTutelado = async (id: number) => {
+  const options = {
+    title: 'Confirmar',
+    message: 'Você tem certeza que deseja excluir o tutelado?',
+    ok: {
+      label: 'Confirmar',
+      color: 'negative'
+    },
+    cancel: {
+    }
+  }
+
+  $q.dialog(options).onOk(() => {
+    api.delete('/tutelado', id)
+      .then(() => {
+        listarTutelados()
+        $q.notify({
+          color: 'positive',
+          message: 'Tutelado excluído com sucesso!',
+          position: 'bottom',
+          icon: 'check_circle',
+        })
+      })
+  })
+}
+
 onMounted(listarTutelados)
 </script>
 
@@ -57,6 +85,7 @@ onMounted(listarTutelados)
       :rows="tutelados"
       v-model:paginacao="paginacao"
       @request="listarTutelados"
+      @delete="deletarTutelado"
       :loading="loading"
     />
   </q-page>

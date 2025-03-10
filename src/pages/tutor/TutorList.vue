@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue'
-import { useReadOnlyApi } from 'src/utils/api'
+import { useCrudApi } from 'src/utils/api';
 import { Paginacao } from 'components/models'
 import TabelaTutores from 'pages/tutor/components/TabelaTutores.vue'
 import FiltroTutores from 'pages/tutor/components/FiltroTutores.vue'
 import { FiltroTutor } from 'pages/tutor/components/models'
+import { useQuasar } from 'quasar';
 
 const filtro: Ref<FiltroTutor> = ref({})
 
 const tutores = ref([])
 const loading = ref(false)
 
-const api = useReadOnlyApi()
+const api = useCrudApi()
+const $q = useQuasar()
 
 const paginacao: Ref<Paginacao> = ref({
   sortBy: 'desc',
@@ -36,6 +38,33 @@ const listarTutores = async ({ pagination }: any = {}) => {
   loading.value = false
 }
 
+
+const deletarTutor = async (id: number) => {
+  const options = {
+    title: 'Confirmar',
+    message: 'Você tem certeza que deseja excluir o tutor?',
+    ok: {
+      label: 'Confirmar',
+      color: 'negative'
+    },
+    cancel: {
+    }
+  }
+
+  $q.dialog(options).onOk(() => {
+    api.delete('/tutor', id)
+      .then(() => {
+        listarTutores()
+        $q.notify({
+          color: 'positive',
+          message: 'Tutor excluído com sucesso!',
+          position: 'bottom',
+          icon: 'check_circle',
+        })
+      })
+  })
+}
+
 onMounted(listarTutores)
 </script>
 
@@ -52,6 +81,7 @@ onMounted(listarTutores)
       :rows="tutores"
       v-model:paginacao="paginacao"
       @request="listarTutores"
+      @delete="deletarTutor"
       :loading="loading"
     />
   </q-page>

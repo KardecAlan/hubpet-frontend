@@ -17,11 +17,11 @@ function formatarData(dataStr) {
   return data.toLocaleDateString()
 }
 function formatarCelular(number) {
-  return number.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
+  return number?.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
 }
 
 function formatarTelefone(number) {
-  return number.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+  return number?.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
 }
 
 function formatarCpf(cpf) {

@@ -48,7 +48,7 @@ const pagination = defineModel<Paginacao>('paginacao')
 
 <style scoped>
 .acoes {
-  visibility: hidden;
+  visibility: visible;
 }
 tr:hover .acoes {
   visibility: visible;
