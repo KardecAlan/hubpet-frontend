@@ -8,6 +8,7 @@ import { TutorFormProps } from 'pages/tutor/components/models'
 import FormLabel from 'components/FormLabel.vue'
 import { Tutelado } from 'pages/tutelado/components/models'
 import { Combo } from 'components/models'
+import HistoricoPeso from 'pages/tutelado/components/HistoricoPeso.vue'
 
 const props = defineProps<TutorFormProps>()
 
@@ -16,6 +17,7 @@ const form: Ref<Tutelado> = ref({
 })
 
 const tutorCombo: Ref<Combo> = ref({ label: undefined, value: undefined })
+const dialogHistoricoPeso = ref(false)
 
 const router = useRouter()
 const api = useCrudApi()
@@ -89,7 +91,6 @@ onMounted(onMountedHook)
 
 <template>
   <q-page class="q-px-md q-py-md">
-
     <q-breadcrumbs class="q-mb-md text-subtitle1">
       <q-breadcrumbs-el label="Início" :to="{ name: 'home' }" />
 
@@ -144,15 +145,7 @@ onMounted(onMountedHook)
             :readonly="isVisualizar"
           />
 
-          <eq-form-input
-            model-value="1"
-            label="Idade"
-            mask="## \ano(s) ## mes(es)"
-            fill-mask
-            class="col-md-4 col-sm-12"
-            outlined
-            :readonly="isVisualizar"
-          />
+          <q-space />
 
           <eq-form-input
             model-value=""
@@ -226,7 +219,6 @@ onMounted(onMountedHook)
         <form-label label="Tutor" />
 
         <eq-form-input model-value="">
-
           <q-select
             v-model="tutorCombo"
             outlined
@@ -257,11 +249,12 @@ onMounted(onMountedHook)
 
       <q-card-actions align="right" class="q-mr-sm q-mt-sm">
         <q-btn
+          v-if="form.id"
           label="Histórico de pesos"
+          @click="dialogHistoricoPeso = !dialogHistoricoPeso"
           no-caps
           icon="fas fa-weight-scale"
           color="secondary"
-          v-show="false"
         />
 
         <q-btn
@@ -282,5 +275,9 @@ onMounted(onMountedHook)
         />
       </q-card-actions>
     </q-card>
+
+    <q-dialog v-model="dialogHistoricoPeso" v-if="form.id">
+      <historico-peso :id-tutelado="form.id" />
+    </q-dialog>
   </q-page>
 </template>

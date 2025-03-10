@@ -14,7 +14,7 @@ const router = useRouter()
 
 const redirecionar = (mode: string, id: number) =>
   router.push({
-    name: `tutor-${mode}`,
+    name: `consulta-${mode}`,
     query: { id },
   })
 </script>

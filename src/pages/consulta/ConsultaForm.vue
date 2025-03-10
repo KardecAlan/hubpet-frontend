@@ -10,7 +10,7 @@ import { Tutelado } from 'pages/tutelado/components/models'
 
 const props = defineProps<ConsultaFormProps>()
 
-const form: Ref<Consulta> = ref({ retorno: false })
+const form: Ref<Consulta> = ref({ retorno: false, tipoConsulta: 'PADRAO' })
 const tutelados: Ref<Tutelado[]> = ref([])
 
 const consultaDetalhada = ref(false)
@@ -33,6 +33,8 @@ const carregarConsulta = async () => {
 
   const data = await api.get(`/consulta/${props.id}`)
   if (data) Object.assign(form.value, data)
+
+  form.value.tuteladoId = data.tutelado?.id
 }
 
 
@@ -47,7 +49,7 @@ const salvarConsulta = async () => {
     icon: 'check_circle',
     color: 'positive',
     position: 'bottom',
-    message: 'Tutor salvo com sucesso!',
+    message: 'Consulta salva com sucesso!',
     progress: true,
   })
 
@@ -103,7 +105,7 @@ onMounted(async () => {
 
           <eq-form-input
             v-model="form.dataConsulta"
-            type="date"
+            type="datetime-local"
             label="Data da consulta"
             class="col-md-3 col-sm-12"
             outlined

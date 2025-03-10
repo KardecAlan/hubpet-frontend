@@ -23,6 +23,14 @@ export interface Atributo {
   descricao?: string
 }
 
+export interface Peso {
+  dataCadastro?: string,
+  pesoEmKg?: number,
+  condicaoCorporal: 'MUITO_MAGRO' | 'MAGRO' | 'SAUDAVEL' | 'OBESO'
+  observacao: string,
+  tutelado: Tutelado
+}
+
 export interface ParamsFiltroTutelado {
   nome?: string
   cpf?: string
@@ -36,9 +44,55 @@ export interface TuteladoFormProps {
 
 export const TuteladosColumns: Column[] = [
   {
-    name: 'nome',
-    label: 'Nome',
+    name: 'tutelado',
+    label: 'Tutelado',
     field: (row: Tutelado) => row.nome,
+    align: 'left',
+  },
+  {
+    name: 'tutor',
+    label: 'Tutor',
+    field: (row: Tutelado) => row.tutor?.nome,
+    align: 'left',
+  },
+  {
+    name: 'raca',
+    label: 'Raça',
+    field: (row: Tutelado) => row.raca,
+    align: 'left',
+  },
+  {
+    name: 'sexo',
+    label: 'Sexo',
+    field: (row: Tutelado) => row.sexo,
+    align: 'left',
+  },
+  {
+    name: 'acoes',
+    label: '',
+    field: 'acoes',
+    align: 'left',
+  },
+]
+
+
+export const PesosColumns: Column[] = [
+  {
+    name: 'dataCadastro',
+    label: 'Data de Cadastro',
+    field: (row: Peso) => row.dataCadastro,
+    align: 'left',
+  },
+  {
+    name: 'peso',
+    label: 'Peso (Kg)',
+    field: (row: Peso) => row.pesoEmKg,
+    align: 'left',
+  },
+  {
+    name: 'condicaoCorporal',
+    label: 'Condição Corporal',
+    field: (row: Peso) => row.condicaoCorporal,
     align: 'left',
   },
   {
