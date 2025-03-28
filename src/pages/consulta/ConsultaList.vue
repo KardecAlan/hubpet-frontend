@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from 'vue'
-import { useReadOnlyApi } from 'src/utils/api'
-import { Paginacao } from 'components/models'
-import TabelaConsultas from 'pages/consulta/components/TabelaConsultas.vue'
-import { ParamsFiltroConsulta } from 'pages/consulta/components/models'
-import FiltroConsulta from 'pages/consulta/components/FiltroConsulta.vue'
+import { onMounted, Ref, ref } from 'vue';
+import { useCrudApi } from 'src/utils/api';
+import { Paginacao } from 'components/models';
+import TabelaConsultas from 'pages/consulta/components/TabelaConsultas.vue';
+import { ParamsFiltroConsulta } from 'pages/consulta/components/models';
+import FiltroConsulta from 'pages/consulta/components/FiltroConsulta.vue';
+import { useQuasar } from 'quasar';
 
 const filtro: Ref<ParamsFiltroConsulta> = ref({})
 
 const tutores = ref([])
 const loading = ref(false)
 
-const api = useReadOnlyApi()
+const api = useCrudApi()
+const $q = useQuasar()
 
 const paginacao: Ref<Paginacao> = ref({
   sortBy: 'desc',
@@ -21,7 +23,7 @@ const paginacao: Ref<Paginacao> = ref({
   rowsNumber: 1,
 })
 
-const listarTutores = async ({ pagination }: any = {}) => {
+const listarConsultas = async ({ pagination }: any = {}) => {
   loading.value = true
   if (pagination) paginacao.value = pagination
 
@@ -37,7 +39,33 @@ const listarTutores = async ({ pagination }: any = {}) => {
   loading.value = false
 }
 
-onMounted(listarTutores)
+const deletarConsulta = async (id: number) => {
+  const options = {
+    title: 'Confirmar',
+    message: 'Você tem certeza que deseja cancelar a consulta?',
+    ok: {
+      label: 'Confirmar',
+      color: 'negative'
+    },
+    cancel: {
+    }
+  }
+
+  $q.dialog(options).onOk(() => {
+    api.delete('/consulta', id)
+      .then(() => {
+        listarConsultas()
+        $q.notify({
+          color: 'positive',
+          message: 'Consulta cancelada com sucesso!',
+          position: 'bottom',
+          icon: 'check_circle',
+        })
+      })
+  })
+}
+
+onMounted(listarConsultas)
 </script>
 
 <template>
@@ -47,12 +75,13 @@ onMounted(listarTutores)
       <q-breadcrumbs-el label="Tutor" />
     </q-breadcrumbs>
 
-    <filtro-consulta v-model="filtro" class="q-mb-md" @filter="listarTutores" />
+    <filtro-consulta v-model="filtro" class="q-mb-md" @filter="listarConsultas" />
 
     <tabela-consultas
+      @delete="deletarConsulta"
       :rows="tutores"
       v-model:paginacao="paginacao"
-      @request="listarTutores"
+      @request="listarConsultas"
       :loading="loading"
     />
   </q-page>
