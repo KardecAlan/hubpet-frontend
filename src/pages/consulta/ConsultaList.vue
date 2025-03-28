@@ -27,6 +27,7 @@ const listarTutores = async ({ pagination }: any = {}) => {
 
   const filtros = {
     ...filtro.value,
+    sort: 'dataConsulta,asc',
   }
 
   const { content, totalElements } = await api.list('/consulta', filtros) ?? {}
