@@ -33,7 +33,7 @@ export interface Peso {
 
 export interface ParamsFiltroTutelado {
   nome?: string
-  cpf?: string
+  tutor?: string
 }
 
 export interface TuteladoFormProps {

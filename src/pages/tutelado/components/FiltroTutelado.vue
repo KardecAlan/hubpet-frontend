@@ -17,13 +17,13 @@ defineEmits(['filter'])
   >
     <eq-form-input
       v-model="model.nome"
-      label="Nome"
+      label="Nome do Animal"
       class="col-md-grow col-sm-12 q-mr-md"
     />
 
     <eq-form-input
-      v-model="model.cpf"
-      label="CPF"
+      v-model="model.tutor"
+      label="Nome do Tutor"
       class="col-md-grow col-sm-12 q-mr-md"
     />
   </eq-form-filtro>
